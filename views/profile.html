@@ -1,0 +1,53 @@
+{% extends 'layout.html' %}
+
+{% block content %}
+  <div class="timeline">
+    <div class="followings half">
+      <h2>팔로잉 목록</h2>
+      {% if user.Followings %}
+        {% for following in user.Followings %}
+          <div>{{following.nick}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="followers half">
+      <h2>팔로워 목록</h2>
+      {% if user.Followers %}
+        {% for follower in user.Followers %}
+          <div>{{follower.nick}}</div>
+        {% endfor %}
+      {% endif %}
+    </div>
+    <div class="followers half">
+      <h2>내 정보</h2>
+      {% if user and user.id %}
+      <input type='hidden' class='user-id' value={{user.id}}>
+       
+        닉네임<br> <b>{{user.nick}}</b> <button class="UserNick_patch">수정하기 </button><br>
+
+        <br>
+    
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}
+{% block script %}
+  <script>
+     document.querySelectorAll('.UserNick_patch').forEach(function(tag) {
+      tag.addEventListener('click', function() {
+          const UserNick = tag.parentNode.querySelector('.user-id').value;
+            if (a=prompt('수정합니다')) {
+              axios.post(`/user/${UserNick}/patch`,{nick:a})
+                .then(() => {
+                  location.reload();
+                })
+                .catch((err) => {
+                  console.error(err);
+                });
+            }
+      });
+    });
+
+    
+  </script>
+{% endblock %}
